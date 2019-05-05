@@ -273,7 +273,7 @@ TEST_F(SerializableObjectListTest, testClear) {
 TEST_F(SerializableObjectListTest, testSerialize) {
   SExpression e = SExpression::createList("list");
   List        l{mMocks[0], mMocks[1], mMocks[2]};
-  l.serialize(e);
+  // l.serialize(e);
   e.removeLineBreaks();  // we are not interested in line breaks...
   EXPECT_EQ(3, e.getChildren().count());
   EXPECT_EQ("test", e.getChildren()[0].getName());

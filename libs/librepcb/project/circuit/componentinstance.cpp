@@ -353,7 +353,7 @@ void ComponentInstance::serialize(SExpression& root) const {
   root.appendChild("lib_device", mDefaultDeviceUuid, true);
   root.appendChild("name", mName, true);
   root.appendChild("value", mValue, false);
-  mAttributes->serialize(root);
+  // mAttributes->serialize(root);
   serializePointerContainer(root, mSignals, "signal");
 }
 

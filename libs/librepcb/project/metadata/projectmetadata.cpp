@@ -116,7 +116,7 @@ void ProjectMetadata::serialize(SExpression& root) const {
   root.appendChild("author", mAuthor, true);
   root.appendChild("version", mVersion, true);
   root.appendChild("created", mCreated, true);
-  mAttributes.serialize(root);
+  // mAttributes.serialize(root);
 }
 
 /*******************************************************************************

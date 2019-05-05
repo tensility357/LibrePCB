@@ -67,7 +67,7 @@ BoardFabricationOutputSettings::BoardFabricationOutputSettings(
   *this = other;
 }
 
-BoardFabricationOutputSettings::BoardFabricationOutputSettings(
+/*BoardFabricationOutputSettings::BoardFabricationOutputSettings(
     const SExpression& node)
   : BoardFabricationOutputSettings()  // init and load defaults
 {
@@ -102,57 +102,9 @@ BoardFabricationOutputSettings::BoardFabricationOutputSettings(
            node.getChildByPath("silkscreen_bot/layers").getChildren()) {
     mSilkscreenLayersBot.append(child.getValue<QString>());
   }
-}
+}*/
 
 BoardFabricationOutputSettings::~BoardFabricationOutputSettings() noexcept {
-}
-
-/*******************************************************************************
- *  General Methods
- ******************************************************************************/
-
-void BoardFabricationOutputSettings::serialize(SExpression& root) const {
-  root.appendChild("base_path", mOutputBasePath, true);
-  root.appendList("outlines", true)
-      .appendChild("suffix", mSuffixOutlines, false);
-  root.appendList("copper_top", true)
-      .appendChild("suffix", mSuffixCopperTop, false);
-  root.appendList("copper_inner", true)
-      .appendChild("suffix", mSuffixCopperInner, false);
-  root.appendList("copper_bot", true)
-      .appendChild("suffix", mSuffixCopperBot, false);
-  root.appendList("soldermask_top", true)
-      .appendChild("suffix", mSuffixSolderMaskTop, false);
-  root.appendList("soldermask_bot", true)
-      .appendChild("suffix", mSuffixSolderMaskBot, false);
-
-  SExpression& silkscreenTop = root.appendList("silkscreen_top", true);
-  silkscreenTop.appendChild("suffix", mSuffixSilkscreenTop, false);
-  SExpression& silkscreenTopLayers = silkscreenTop.appendList("layers", true);
-  foreach (const QString& layer, mSilkscreenLayersTop) {
-    silkscreenTopLayers.appendChild(SExpression::createToken(layer));
-  }
-
-  SExpression& silkscreenBot = root.appendList("silkscreen_bot", true);
-  silkscreenBot.appendChild("suffix", mSuffixSilkscreenBot, false);
-  SExpression& silkscreenBotLayers = silkscreenBot.appendList("layers", true);
-  foreach (const QString& layer, mSilkscreenLayersBot) {
-    silkscreenBotLayers.appendChild(SExpression::createToken(layer));
-  }
-
-  SExpression& drills = root.appendList("drills", true);
-  drills.appendChild("merge", mMergeDrillFiles, false);
-  drills.appendChild("suffix_pth", mSuffixDrillsPth, true);
-  drills.appendChild("suffix_npth", mSuffixDrillsNpth, true);
-  drills.appendChild("suffix_merged", mSuffixDrills, true);
-
-  SExpression& solderPasteTop = root.appendList("solderpaste_top", true);
-  solderPasteTop.appendChild("create", mEnableSolderPasteTop, false);
-  solderPasteTop.appendChild("suffix", mSuffixSolderPasteTop, false);
-
-  SExpression& solderPasteBot = root.appendList("solderpaste_bot", true);
-  solderPasteBot.appendChild("create", mEnableSolderPasteBot, false);
-  solderPasteBot.appendChild("suffix", mSuffixSolderPasteBot, false);
 }
 
 /*******************************************************************************
@@ -206,6 +158,63 @@ bool BoardFabricationOutputSettings::operator==(
   if (mEnableSolderPasteBot != rhs.mEnableSolderPasteBot) return false;
   return true;
 }
+
+/*******************************************************************************
+ *  Serialization
+ ******************************************************************************/
+
+void serializeToSExpression(SExpression&                          root,
+                   const BoardFabricationOutputSettings& obj) {
+  root.appendChild("base_path", obj.getOutputBasePath(), true);
+  root.appendList("outlines", true)
+      .appendChild("suffix", obj.getSuffixOutlines(), false);
+  root.appendList("copper_top", true)
+      .appendChild("suffix", obj.getSuffixCopperTop(), false);
+  root.appendList("copper_inner", true)
+      .appendChild("suffix", obj.getSuffixCopperInner(), false);
+  root.appendList("copper_bot", true)
+      .appendChild("suffix", obj.getSuffixCopperBot(), false);
+  root.appendList("soldermask_top", true)
+      .appendChild("suffix", obj.getSuffixSolderMaskTop(), false);
+  root.appendList("soldermask_bot", true)
+      .appendChild("suffix", obj.getSuffixSolderMaskBot(), false);
+
+  SExpression& silkscreenTop = root.appendList("silkscreen_top", true);
+  silkscreenTop.appendChild("suffix", obj.getSuffixSilkscreenTop(), false);
+  SExpression& silkscreenTopLayers = silkscreenTop.appendList("layers", true);
+  foreach (const QString& layer, obj.getSilkscreenLayersTop()) {
+    silkscreenTopLayers.appendChild(SExpression::createToken(layer));
+  }
+
+  SExpression& silkscreenBot = root.appendList("silkscreen_bot", true);
+  silkscreenBot.appendChild("suffix", obj.getSuffixSilkscreenBot(), false);
+  SExpression& silkscreenBotLayers = silkscreenBot.appendList("layers", true);
+  foreach (const QString& layer, obj.getSilkscreenLayersBot()) {
+    silkscreenBotLayers.appendChild(SExpression::createToken(layer));
+  }
+
+  SExpression& drills = root.appendList("drills", true);
+  drills.appendChild("merge", obj.getMergeDrillFiles(), false);
+  drills.appendChild("suffix_pth", obj.getSuffixDrillsPth(), true);
+  drills.appendChild("suffix_npth", obj.getSuffixDrillsNpth(), true);
+  drills.appendChild("suffix_merged", obj.getSuffixDrills(), true);
+
+  SExpression& solderPasteTop = root.appendList("solderpaste_top", true);
+  solderPasteTop.appendChild("create", obj.getEnableSolderPasteTop(), false);
+  solderPasteTop.appendChild("suffix", obj.getSuffixSolderPasteTop(), false);
+
+  SExpression& solderPasteBot = root.appendList("solderpaste_bot", true);
+  solderPasteBot.appendChild("create", obj.getEnableSolderPasteBot(), false);
+  solderPasteBot.appendChild("suffix", obj.getSuffixSolderPasteBot(), false);
+}
+
+// inline BoardFabricationOutputSettings deserialize(const SExpression& sexpr,
+//                                                  const Version& fileFormat) {
+//  Q_UNUSED(sexpr);
+//  Q_UNUSED(fileFormat);
+//  BoardFabricationOutputSettings s;
+//  return s;
+//}
 
 /*******************************************************************************
  *  End of File

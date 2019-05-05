@@ -29,7 +29,7 @@
 
 #include <librepcb/common/attributes/attribute.h>
 #include <librepcb/common/attributes/attributeprovider.h>
-#include <librepcb/common/fileio/serializableobject.h>
+#include <librepcb/common/fileio/serialization.h>
 #include <librepcb/common/uuid.h>
 
 #include <QtCore>
@@ -61,8 +61,7 @@ class BI_Footprint;
  */
 class BI_Device final : public BI_Base,
                         public AttributeProvider,
-                        public IF_ErcMsgProvider,
-                        public SerializableObject {
+                        public IF_ErcMsgProvider {
   Q_OBJECT
   DECLARE_ERC_MSG_CLASS_NAME(BI_Device)
 
@@ -71,7 +70,6 @@ public:
   BI_Device()                       = delete;
   BI_Device(const BI_Device& other) = delete;
   BI_Device(Board& board, const BI_Device& other);
-  BI_Device(Board& board, const SExpression& node);
   BI_Device(Board& board, ComponentInstance& compInstance,
             const Uuid& deviceUuid, const Uuid& footprintUuid,
             const Point& position, const Angle& rotation, bool mirror);
@@ -89,10 +87,11 @@ public:
   const library::Footprint& getLibFootprint() const noexcept {
     return *mLibFootprint;
   }
-  BI_Footprint& getFootprint() const noexcept { return *mFootprint; }
-  const Angle&  getRotation() const noexcept { return mRotation; }
-  bool          isSelectable() const noexcept override;
-  bool          isUsed() const noexcept;
+  BI_Footprint&        getFootprint() const noexcept { return *mFootprint; }
+  const AttributeList& getAttributes() const noexcept { return mAttributes; }
+  const Angle&         getRotation() const noexcept { return mRotation; }
+  bool                 isSelectable() const noexcept override;
+  bool                 isUsed() const noexcept;
 
   // Setters
   void setPosition(const Point& pos) noexcept;
@@ -102,9 +101,6 @@ public:
   // General Methods
   void addToBoard() override;
   void removeFromBoard() override;
-
-  /// @copydoc librepcb::SerializableObject::serialize()
-  void serialize(SExpression& root) const override;
 
   // Inherited from AttributeProvider
   /// @copydoc librepcb::AttributeProvider::getUserDefinedAttributeValue()
@@ -157,6 +153,12 @@ private:
   AttributeList
       mAttributes;  ///< not yet used, but already specified in file format
 };
+
+/*******************************************************************************
+ *  Non-Member Functions
+ ******************************************************************************/
+
+void serializeToSExpression(SExpression& root, const BI_Device& obj);
 
 /*******************************************************************************
  *  End of File

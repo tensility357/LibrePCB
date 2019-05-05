@@ -197,10 +197,10 @@ void Symbol::textsEdited(const TextList& list, int index,
 
 void Symbol::serialize(SExpression& root) const {
   LibraryElement::serialize(root);
-  mPins.serialize(root);
-  mPolygons.serialize(root);
-  mCircles.serialize(root);
-  mTexts.serialize(root);
+  // mPins.serialize(root);
+  // mPolygons.serialize(root);
+  // mCircles.serialize(root);
+  // mTexts.serialize(root);
 }
 
 /*******************************************************************************

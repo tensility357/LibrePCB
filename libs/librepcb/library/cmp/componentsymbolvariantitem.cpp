@@ -152,7 +152,7 @@ void ComponentSymbolVariantItem::serialize(SExpression& root) const {
   root.appendChild("rotation", mSymbolRot, false);
   root.appendChild("required", mIsRequired, false);
   root.appendChild("suffix", mSuffix, false);
-  mPinSignalMap.sortedByUuid().serialize(root);
+  ::librepcb::serialize(root, mPinSignalMap.sortedByUuid());
 }
 
 /*******************************************************************************

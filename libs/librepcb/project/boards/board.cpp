@@ -252,8 +252,8 @@ Board::Board(Project&                                project,
           new BoardDesignRules(root.getChildByPath("design_rules")));
 
       // load fabrication output settings
-      mFabricationOutputSettings.reset(new BoardFabricationOutputSettings(
-          root.getChildByPath("fabrication_output_settings")));
+      // mFabricationOutputSettings.reset(new BoardFabricationOutputSettings(
+      //    root.getChildByPath("fabrication_output_settings")));
 
       // load user settings
       try {
@@ -273,18 +273,19 @@ Board::Board(Project&                                project,
       }
 
       // Load all device instances
-      foreach (const SExpression& node, root.getChildren("device")) {
-        BI_Device* device = new BI_Device(*this, node);
-        if (getDeviceInstanceByComponentUuid(
-                device->getComponentInstanceUuid())) {
-          throw RuntimeError(
-              __FILE__, __LINE__,
-              QString(tr("There is already a device of the component instance "
-                         "\"%1\"!"))
-                  .arg(device->getComponentInstanceUuid().toStr()));
-        }
-        mDeviceInstances.insert(device->getComponentInstanceUuid(), device);
-      }
+      // foreach (const SExpression& node, root.getChildren("device")) {
+      //  BI_Device* device = new BI_Device(*this, node);
+      //  if (getDeviceInstanceByComponentUuid(
+      //          device->getComponentInstanceUuid())) {
+      //    throw RuntimeError(
+      //        __FILE__, __LINE__,
+      //        QString(tr("There is already a device of the component instance
+      //        "
+      //                   "\"%1\"!"))
+      //            .arg(device->getComponentInstanceUuid().toStr()));
+      //  }
+      //  mDeviceInstances.insert(device->getComponentInstanceUuid(), device);
+      //}
 
       // Load all netsegments
       foreach (const SExpression& node, root.getChildren("netsegment")) {
@@ -822,7 +823,7 @@ void Board::removeFromProject() {
 void Board::save() {
   if (mIsAddedToProject) {
     // save board file
-    SExpression brdDoc(serializeToDomElement("librepcb_board"));  // can throw
+    SExpression brdDoc = serializeObject(*this, "librepcb_board");  // can throw
     mDirectory->write(getFilePath().getFilename(),
                       brdDoc.toByteArray());  // can throw
 
@@ -928,31 +929,6 @@ void Board::updateIcon() noexcept {
   mIcon = QIcon(mGraphicsScene->toPixmap(QSize(297, 210), Qt::white));
 }
 
-void Board::serialize(SExpression& root) const {
-  root.appendChild(mUuid);
-  root.appendChild("name", mName, true);
-  root.appendChild("default_font", mDefaultFontFileName, true);
-  root.appendChild(mGridProperties->serializeToDomElement("grid"), true);
-  root.appendChild(mLayerStack->serializeToDomElement("layers"), true);
-  root.appendChild(mDesignRules->serializeToDomElement("design_rules"), true);
-  root.appendChild(mFabricationOutputSettings->serializeToDomElement(
-                       "fabrication_output_settings"),
-                   true);
-  root.appendLineBreak();
-  serializePointerContainer(root, mDeviceInstances, "device");
-  root.appendLineBreak();
-  serializePointerContainerUuidSorted(root, mNetSegments, "netsegment");
-  root.appendLineBreak();
-  serializePointerContainerUuidSorted(root, mPlanes, "plane");
-  root.appendLineBreak();
-  serializePointerContainerUuidSorted(root, mPolygons, "polygon");
-  root.appendLineBreak();
-  serializePointerContainerUuidSorted(root, mStrokeTexts, "stroke_text");
-  root.appendLineBreak();
-  serializePointerContainerUuidSorted(root, mHoles, "hole");
-  root.appendLineBreak();
-}
-
 void Board::updateErcMessages() noexcept {
   // type: UnplacedComponent (ComponentInstances without DeviceInstance)
   if (mIsAddedToProject) {
@@ -995,6 +971,38 @@ Board* Board::create(Project&                                project,
                      std::unique_ptr<TransactionalDirectory> directory,
                      const ElementName&                      name) {
   return new Board(project, std::move(directory), true, *name);
+}
+
+/*******************************************************************************
+ *  Non-Member Functions
+ ******************************************************************************/
+
+void serializeToSExpression(SExpression& root, const Board& obj) {
+  root.appendChild(obj.getUuid());
+  root.appendChild("name", obj.getName(), true);
+  root.appendChild("default_font", obj.getDefaultFontName(), true);
+  root.appendChild(obj.getGridProperties().serializeToDomElement("grid"), true);
+  root.appendChild(obj.getLayerStack().serializeToDomElement("layers"), true);
+  root.appendChild(obj.getDesignRules().serializeToDomElement("design_rules"),
+                   true);
+  root.appendChild(serializeObject(obj.getFabricationOutputSettings(),
+                                   "fabrication_output_settings"),
+                   true);
+  root.appendLineBreak();
+  serializePointerContainer(root, obj.getDeviceInstances(), "device");
+  root.appendLineBreak();
+  // serializePointerContainerUuidSorted(root, obj.getNetSegments(),
+  // "netsegment");
+  root.appendLineBreak();
+  // serializePointerContainerUuidSorted(root, obj.getPlanes(), "plane");
+  root.appendLineBreak();
+  // serializePointerContainerUuidSorted(root, obj.getPolygons(), "polygon");
+  root.appendLineBreak();
+  // serializePointerContainerUuidSorted(root, obj.getStrokeTexts(),
+  //                                    "stroke_text");
+  root.appendLineBreak();
+  // serializePointerContainerUuidSorted(root, obj.getHoles(), "hole");
+  root.appendLineBreak();
 }
 
 /*******************************************************************************

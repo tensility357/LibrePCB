@@ -85,8 +85,8 @@ void Device::serialize(SExpression& root) const {
   LibraryElement::serialize(root);
   root.appendChild("component", mComponentUuid, true);
   root.appendChild("package", mPackageUuid, true);
-  mAttributes.serialize(root);
-  mPadSignalMap.sortedByUuid().serialize(root);
+  ::librepcb::serialize(root, mAttributes);
+  ::librepcb::serialize(root, mPadSignalMap.sortedByUuid());
 }
 
 /*******************************************************************************

@@ -61,7 +61,7 @@ BI_Device::BI_Device(Board& board, const BI_Device& other)
   init();
 }
 
-BI_Device::BI_Device(Board& board, const SExpression& node)
+/*BI_Device::BI_Device(Board& board, const SExpression& node)
   : BI_Base(board),
     mCompInstance(nullptr),
     mLibDevice(nullptr),
@@ -95,7 +95,7 @@ BI_Device::BI_Device(Board& board, const SExpression& node)
   mFootprint.reset(new BI_Footprint(*this, node));
 
   init();
-}
+}*/
 
 BI_Device::BI_Device(Board& board, ComponentInstance& compInstance,
                      const Uuid& deviceUuid, const Uuid& footprintUuid,
@@ -243,19 +243,6 @@ void BI_Device::removeFromBoard() {
   updateErcMessages();
 }
 
-void BI_Device::serialize(SExpression& root) const {
-  if (!checkAttributesValidity()) throw LogicError(__FILE__, __LINE__);
-
-  root.appendChild(mCompInstance->getUuid());
-  root.appendChild("lib_device", mLibDevice->getUuid(), true);
-  root.appendChild("lib_footprint", mLibFootprint->getUuid(), true);
-  root.appendChild(mPosition.serializeToDomElement("position"), true);
-  root.appendChild("rotation", mRotation, false);
-  root.appendChild("mirror", mIsMirrored, false);
-  mAttributes.serialize(root);
-  mFootprint->serialize(root);
-}
-
 /*******************************************************************************
  *  Inherited from AttributeProvider
  ******************************************************************************/
@@ -319,6 +306,21 @@ void BI_Device::updateErcMessages() noexcept {
 
 const QStringList& BI_Device::getLocaleOrder() const noexcept {
   return getProject().getSettings().getLocaleOrder();
+}
+
+/*******************************************************************************
+ *  Non-Member Functions
+ ******************************************************************************/
+
+void serializeToSExpression(SExpression& root, const BI_Device& obj) {
+  root.appendChild(obj.getComponentInstanceUuid());
+  root.appendChild("lib_device", obj.getLibDevice().getUuid(), true);
+  root.appendChild("lib_footprint", obj.getLibFootprint().getUuid(), true);
+  root.appendChild(obj.getPosition().serializeToDomElement("position"), true);
+  root.appendChild("rotation", obj.getRotation(), false);
+  root.appendChild("mirror", obj.getIsMirrored(), false);
+  serialize(root, obj.getAttributes());
+  // mFootprint->serialize(root);
 }
 
 /*******************************************************************************

@@ -151,11 +151,11 @@ void Footprint::serialize(SExpression& root) const {
   root.appendChild(mUuid);
   mNames.serialize(root);
   mDescriptions.serialize(root);
-  mPads.serialize(root);
-  mPolygons.serialize(root);
-  mCircles.serialize(root);
-  mStrokeTexts.serialize(root);
-  mHoles.serialize(root);
+  // mPads.serialize(root);
+  // mPolygons.serialize(root);
+  // mCircles.serialize(root);
+  // mStrokeTexts.serialize(root);
+  // mHoles.serialize(root);
 }
 
 /*******************************************************************************

@@ -101,12 +101,12 @@ void FootprintClipboardData::serialize(SExpression& root) const {
   root.appendChild(mCursorPos.serializeToDomElement("cursor_position"), true);
   root.appendChild("footprint", mFootprintUuid, true);
   SExpression& packageRoot = root.appendList("package", true);
-  mPackagePads.serialize(packageRoot);
-  mFootprintPads.serialize(root);
-  mPolygons.serialize(root);
-  mCircles.serialize(root);
-  mStrokeTexts.serialize(root);
-  mHoles.serialize(root);
+  // mPackagePads.serialize(packageRoot);
+  // mFootprintPads.serialize(root);
+  // mPolygons.serialize(root);
+  // mCircles.serialize(root);
+  // mStrokeTexts.serialize(root);
+  // mHoles.serialize(root);
 }
 
 QPixmap FootprintClipboardData::generatePixmap(

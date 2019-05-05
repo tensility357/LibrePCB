@@ -93,10 +93,10 @@ std::unique_ptr<SymbolClipboardData> SymbolClipboardData::fromMimeData(
 void SymbolClipboardData::serialize(SExpression& root) const {
   root.appendChild(mCursorPos.serializeToDomElement("cursor_position"), true);
   root.appendChild("symbol", mSymbolUuid, true);
-  mPins.serialize(root);
-  mPolygons.serialize(root);
-  mCircles.serialize(root);
-  mTexts.serialize(root);
+  // mPins.serialize(root);
+  // mPolygons.serialize(root);
+  // mCircles.serialize(root);
+  // mTexts.serialize(root);
 }
 
 QPixmap SymbolClipboardData::generatePixmap(

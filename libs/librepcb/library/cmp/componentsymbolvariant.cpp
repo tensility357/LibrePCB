@@ -141,7 +141,7 @@ void ComponentSymbolVariant::serialize(SExpression& root) const {
   root.appendChild("norm", mNorm, false);
   mNames.serialize(root);
   mDescriptions.serialize(root);
-  mSymbolItems.serialize(root);
+  ::librepcb::serialize(root, mSymbolItems);
 }
 
 /*******************************************************************************

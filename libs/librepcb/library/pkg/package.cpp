@@ -73,8 +73,8 @@ LibraryElementCheckMessageList Package::runChecks() const {
 
 void Package::serialize(SExpression& root) const {
   LibraryElement::serialize(root);
-  mPads.serialize(root);
-  mFootprints.serialize(root);
+  // mPads.serialize(root);
+  // mFootprints.serialize(root);
 }
 
 /*******************************************************************************

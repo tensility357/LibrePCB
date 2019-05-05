@@ -26,6 +26,7 @@
 #include "../signalslot.h"
 #include "../uuid.h"
 #include "serializableobject.h"
+#include "serialization.h"
 
 #include <QtCore>
 
@@ -91,7 +92,7 @@ namespace librepcb {
  * range based for loops (since C++11) instead.
  */
 template <typename T, typename P, typename... OnEditedArgs>
-class SerializableObjectList : public SerializableObject {
+class SerializableObjectList {
   Q_DECLARE_TR_FUNCTIONS(SerializableObjectList)
 
 public:
@@ -344,10 +345,6 @@ public:
     }
     Q_ASSERT(isEmpty() && mObjects.isEmpty());
   }
-  /// @copydoc librepcb::SerializableObject::serialize()
-  void serialize(SExpression& root) const override {
-    serializePointerContainer(root, mObjects, P::tagname);  // can throw
-  }
 
   // Convenience Methods
   SerializableObjectList<T, P, OnEditedArgs...> sortedByUuid() const noexcept {
@@ -457,6 +454,19 @@ protected:  // Data
   QVector<std::shared_ptr<T>> mObjects;
   Slot<T, OnEditedArgs...>    mOnEditedSlot;
 };
+
+/*******************************************************************************
+ *  Non-Member Functions
+ ******************************************************************************/
+
+template <typename T, typename P>
+void serializeToSExpression(SExpression& root, const SerializableObjectList<T, P>& obj) {
+  Q_UNUSED(root);
+  Q_UNUSED(obj);
+  // for (const auto& item : obj) {
+  //  root.appendChild(serializeObject(*item, P::tagname), true);
+  //}
+}
 
 }  // namespace librepcb
 

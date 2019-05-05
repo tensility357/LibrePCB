@@ -23,7 +23,7 @@
 /*******************************************************************************
  *  Includes
  ******************************************************************************/
-#include <librepcb/common/fileio/serializableobject.h>
+#include <librepcb/common/fileio/serialization.h>
 
 #include <QtCore>
 
@@ -40,13 +40,12 @@ namespace project {
 /**
  * @brief The BoardFabricationOutputSettings class
  */
-class BoardFabricationOutputSettings final : public SerializableObject {
+class BoardFabricationOutputSettings final {
 public:
   // Constructors / Destructor
   BoardFabricationOutputSettings() noexcept;
   BoardFabricationOutputSettings(
       const BoardFabricationOutputSettings& other) noexcept;
-  explicit BoardFabricationOutputSettings(const SExpression& node);
   ~BoardFabricationOutputSettings() noexcept;
 
   // Getters
@@ -139,9 +138,6 @@ public:
   void setEnableSolderPasteTop(bool e) noexcept { mEnableSolderPasteTop = e; }
   void setEnableSolderPasteBot(bool e) noexcept { mEnableSolderPasteBot = e; }
 
-  /// @copydoc librepcb::SerializableObject::serialize()
-  void serialize(SExpression& root) const override;
-
   // Operator Overloadings
   BoardFabricationOutputSettings& operator=(
       const BoardFabricationOutputSettings& rhs) noexcept;
@@ -171,6 +167,16 @@ private:  // Data
   bool        mEnableSolderPasteTop;
   bool        mEnableSolderPasteBot;
 };
+
+/*******************************************************************************
+ *  Non-Member Functions
+ ******************************************************************************/
+
+void serializeToSExpression(SExpression&                          root,
+                   const BoardFabricationOutputSettings& obj);
+
+// BoardFabricationOutputSettings deserializeToSExpression(const SExpression& sexpr,
+//                                           const Version&     fileFormat);
 
 /*******************************************************************************
  *  End of File

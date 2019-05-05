@@ -348,8 +348,8 @@ bool CommandLineInterface::openProject(
           qDebug() << "Load custom fabrication output settings:"
                    << pcbFabricationSettingsPath;
           FilePath fp(QFileInfo(pcbFabricationSettingsPath).absoluteFilePath());
-          customSettings = BoardFabricationOutputSettings(
-              SExpression::parse(FileUtils::readFile(fp), fp));  // can throw
+          // customSettings = BoardFabricationOutputSettings(
+          //    SExpression::parse(FileUtils::readFile(fp), fp));  // can throw
         } catch (const Exception& e) {
           printErr(QString(tr("ERROR: Failed to load custom settings: %1"))
                        .arg(e.getMsg()));

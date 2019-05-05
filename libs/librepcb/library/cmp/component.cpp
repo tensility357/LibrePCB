@@ -141,9 +141,9 @@ void Component::serialize(SExpression& root) const {
   root.appendChild("schematic_only", mSchematicOnly, true);
   root.appendChild("default_value", mDefaultValue, true);
   mPrefixes.serialize(root);
-  mAttributes.serialize(root);
-  mSignals.serialize(root);
-  mSymbolVariants.serialize(root);
+  ::librepcb::serialize(root, mAttributes);
+  ::librepcb::serialize(root, mSignals);
+  ::librepcb::serialize(root, mSymbolVariants);
 }
 
 QString Component::cleanNorm(QString norm) noexcept {
