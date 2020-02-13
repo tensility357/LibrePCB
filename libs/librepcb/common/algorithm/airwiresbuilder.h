@@ -96,6 +96,7 @@ public:
   AirWiresBuilder& operator=(const AirWiresBuilder& rhs) = delete;
 
 private:  // Methods
+  bool     arePointsColinear() const noexcept;
   AirWires kruskalMst() noexcept;
 
 private:  // Data

@@ -47,7 +47,7 @@ AirWiresBuilder::~AirWiresBuilder() noexcept {
 
 int AirWiresBuilder::addPoint(const Point& p) noexcept {
   int id = mPoints.size();
-  mPoints.emplace_back(p.getX().toNm(), p.getY().toNm(), id);
+  mPoints.emplace_back(p.getX().toMm(), p.getY().toMm(), id);
   return id;
 }
 
@@ -60,12 +60,25 @@ AirWiresBuilder::AirWires AirWiresBuilder::buildAirWires() noexcept {
   uint connectedEdges = mEdges.size();
 
   // determine additional edges between found points (candidates for airwires)
-  if (mPoints.size() >= 3) {  // minimum 3 points needed for triangulation
+  if (mPoints.size() <= 1) {
+    // no triangulation needed
+  } else if (mPoints.size() == 2) {
+    // manual triangulation since delaunay doesn't work properly in this case
+    mEdges.emplace_back(mPoints[0], mPoints[1], -1);
+  } else if (arePointsColinear()) {
+    // manual triangulation since delaunay doesn't work properly in this case
+    std::vector<delaunay::Vector2<qreal>> sortedPoints = mPoints;
+    std::sort(sortedPoints.begin(), sortedPoints.end(),
+              [](const delaunay::Vector2<qreal>& a,
+                 const delaunay::Vector2<qreal>& b) { return a.x < b.x; });
+    for (size_t i = 1; i < sortedPoints.size(); i++) {
+      mEdges.emplace_back(sortedPoints[i - 1], sortedPoints[i], -1);
+    }
+  } else {
+    // triangulate with delaunay
     delaunay::Delaunay<qreal> del;
     del.triangulate(mPoints);
     mEdges.insert(mEdges.end(), del.getEdges().begin(), del.getEdges().end());
-  } else if (mPoints.size() == 2) {
-    mEdges.emplace_back(mPoints[0], mPoints[1], -1);
   }
 
   // determine weights of these new edges
@@ -80,6 +93,31 @@ AirWiresBuilder::AirWires AirWiresBuilder::buildAirWires() noexcept {
 /*******************************************************************************
  *  Private Methods
  ******************************************************************************/
+
+// copied from horizon
+bool AirWiresBuilder::arePointsColinear() const noexcept {
+  if (mPoints.size() < 3) return true;
+  auto        it  = mPoints.cbegin();
+  const auto& pp0 = *it++;
+  QPointF     p0(pp0.x, pp0.y);
+  const auto& pp1 = *it++;
+  QPointF     p1(pp1.x, pp1.y);
+  auto        v  = p1 - p0;
+  auto        a0 = std::atan2(v.y(), v.x());
+  if (a0 < 0) a0 += M_PI;
+  for (; it != mPoints.cend(); it++) {
+    QPointF p(it->x, it->y);
+    auto    vp = p - p0;
+    if ((vp.x() * vp.x() + vp.y() * vp.y()) > 1e6) {  // > 1µm
+      auto a = std::atan2(vp.y(), vp.x());
+      if (a < 0) a += M_PI;
+      if (std::abs(a - a0) > 1e-6) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 // adapted from horizon/kicad
 AirWiresBuilder::AirWires AirWiresBuilder::kruskalMst() noexcept {
@@ -149,7 +187,8 @@ AirWiresBuilder::AirWires AirWiresBuilder::kruskalMst() noexcept {
         // assert( newEdge.GetSourceNode()->GetTag() !=
         // newEdge.GetTargetNode()->GetTag() );
         // assert(dt.p1.tag != dt.p2.tag);
-        mst.append(qMakePair(Point(dt.p1.x, dt.p1.y), Point(dt.p2.x, dt.p2.y)));
+        mst.append(qMakePair(Point::fromMm(dt.p1.x, dt.p1.y),
+                             Point::fromMm(dt.p2.x, dt.p2.y)));
         ++mstSize;
       } else {
         // for( it = cycles[trgTag].begin(), itEnd =
