@@ -56,6 +56,12 @@ void AirWiresBuilder::addEdge(int p1, int p2) noexcept {
 }
 
 AirWiresBuilder::AirWires AirWiresBuilder::buildAirWires() noexcept {
+  std::sort(
+      mPoints.begin(), mPoints.end(),
+      [](const delaunay::Vector2<qreal>& a, const delaunay::Vector2<qreal>& b) {
+        return (a.x < b.x) || ((a.x == b.x) && (a.y < b.y));
+      });
+
   // remember how many edges are already known as connected
   uint connectedEdges = mEdges.size();
 
@@ -65,20 +71,27 @@ AirWiresBuilder::AirWires AirWiresBuilder::buildAirWires() noexcept {
   } else if (mPoints.size() == 2) {
     // manual triangulation since delaunay doesn't work properly in this case
     mEdges.emplace_back(mPoints[0], mPoints[1], -1);
-  } else if (arePointsColinear()) {
-    // manual triangulation since delaunay doesn't work properly in this case
-    std::vector<delaunay::Vector2<qreal>> sortedPoints = mPoints;
-    std::sort(sortedPoints.begin(), sortedPoints.end(),
-              [](const delaunay::Vector2<qreal>& a,
-                 const delaunay::Vector2<qreal>& b) { return a.x < b.x; });
-    for (size_t i = 1; i < sortedPoints.size(); i++) {
-      mEdges.emplace_back(sortedPoints[i - 1], sortedPoints[i], -1);
-    }
+    //} else if (arePointsColinear()) {
+    //  // manual triangulation since delaunay doesn't work properly in this
+    //  case
+    //  //std::vector<delaunay::Vector2<qreal>> sortedPoints = mPoints;
+    //  //std::sort(sortedPoints.begin(), sortedPoints.end(),
+    //  //          [](const delaunay::Vector2<qreal>& a,
+    //  //             const delaunay::Vector2<qreal>& b) { return a.x < b.x;
+    //  }); for (size_t i = 1; i < mPoints.size(); i++) {
+    //    mEdges.emplace_back(mPoints[i - 1], mPoints[i], -1);
+    //  }
   } else {
     // triangulate with delaunay
     delaunay::Delaunay<qreal> del;
     del.triangulate(mPoints);
-    mEdges.insert(mEdges.end(), del.getEdges().begin(), del.getEdges().end());
+    if (del.getEdges().size() >= mPoints.size()) {
+      mEdges.insert(mEdges.end(), del.getEdges().begin(), del.getEdges().end());
+    } else {
+      for (size_t i = 1; i < mPoints.size(); i++) {
+        mEdges.emplace_back(mPoints[i - 1], mPoints[i], -1);
+      }
+    }
   }
 
   // determine weights of these new edges
@@ -111,7 +124,8 @@ bool AirWiresBuilder::arePointsColinear() const noexcept {
     if ((vp.x() * vp.x() + vp.y() * vp.y()) > 1e6) {  // > 1µm
       auto a = std::atan2(vp.y(), vp.x());
       if (a < 0) a += M_PI;
-      if (std::abs(a - a0) > 1e-6) {
+      a = std::abs(a - a0);
+      if (a > 0.2) {
         return false;
       }
     }
