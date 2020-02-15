@@ -103,13 +103,13 @@ bool AirWiresBuilder::arePointsColinear() const noexcept {
   const auto& pp1 = *it++;
   QPointF     p1(pp1.x, pp1.y);
   auto        v  = p1 - p0;
-  auto        a0 = std::atan(v.y(), v.x());
+  auto        a0 = std::atan2(v.y(), v.x());
   if (a0 < 0) a0 += M_PI;
   for (; it != mPoints.cend(); it++) {
     QPointF p(it->x, it->y);
     auto    vp = p - p0;
     if ((vp.x() * vp.x() + vp.y() * vp.y()) > 1e6) {  // > 1µm
-      auto a = std::atan(vp.y(), vp.x());
+      auto a = std::atan2(vp.y(), vp.x());
       if (a < 0) a += M_PI;
       if (std::abs(a - a0) > 1e-6) {
         return false;
@@ -187,8 +187,7 @@ AirWiresBuilder::AirWires AirWiresBuilder::kruskalMst() noexcept {
         // assert( newEdge.GetSourceNode()->GetTag() !=
         // newEdge.GetTargetNode()->GetTag() );
         // assert(dt.p1.tag != dt.p2.tag);
-        mst.append(qMakePair(Point(dt.p1.x, dt.p1.y),
-                             Point(dt.p2.x, dt.p2.y)));
+        mst.append(qMakePair(Point(dt.p1.x, dt.p1.y), Point(dt.p2.x, dt.p2.y)));
         ++mstSize;
       } else {
         // for( it = cycles[trgTag].begin(), itEnd =
