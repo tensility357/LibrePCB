@@ -62,33 +62,35 @@ TEST_F(AirWiresBuilderTest, testEmpty) {
 
 TEST_F(AirWiresBuilderTest, testOnePoint) {
   AirWiresBuilder builder;
-  builder.addPoint(Point(100, 200));
+  builder.addPoint(Point(1000000, 2000000));
   AirWiresBuilder::AirWires airwires = sorted(builder.buildAirWires());
   EXPECT_EQ(0, airwires.size());
 }
 
 TEST_F(AirWiresBuilderTest, testTwoUnconnectedPoints) {
   AirWiresBuilder builder;
-  builder.addPoint(Point(100, 200));
-  builder.addPoint(Point(300, 400));
+  builder.addPoint(Point(1000000, 2000000));
+  builder.addPoint(Point(3000000, 4000000));
   AirWiresBuilder::AirWires airwires = sorted(builder.buildAirWires());
-  AirWiresBuilder::AirWires expected = {{Point(100, 200), Point(300, 400)}};
+  AirWiresBuilder::AirWires expected = {
+      {Point(1000000, 2000000), Point(3000000, 4000000)}};
   EXPECT_EQ(expected, airwires);
 }
 
 TEST_F(AirWiresBuilderTest, testTwoUnconnectedOverlappingPoints) {
   AirWiresBuilder builder;
-  builder.addPoint(Point(100, 200));
-  builder.addPoint(Point(100, 200));
+  builder.addPoint(Point(100000, 200000));
+  builder.addPoint(Point(100000, 200000));
   AirWiresBuilder::AirWires airwires = sorted(builder.buildAirWires());
-  AirWiresBuilder::AirWires expected = {{Point(100, 200), Point(100, 200)}};
+  AirWiresBuilder::AirWires expected = {
+      {Point(100000, 200000), Point(100000, 200000)}};
   EXPECT_EQ(expected, airwires);
 }
 
 TEST_F(AirWiresBuilderTest, testTwoConnectedPoints) {
   AirWiresBuilder builder;
-  int             id0 = builder.addPoint(Point(100, 200));
-  int             id1 = builder.addPoint(Point(300, 400));
+  int             id0 = builder.addPoint(Point(100000, 200000));
+  int             id1 = builder.addPoint(Point(300000, 400000));
   builder.addEdge(id0, id1);
   AirWiresBuilder::AirWires airwires = sorted(builder.buildAirWires());
   EXPECT_EQ(0, airwires.size());
@@ -96,23 +98,24 @@ TEST_F(AirWiresBuilderTest, testTwoConnectedPoints) {
 
 TEST_F(AirWiresBuilderTest, testThreeUnconnectedPoints) {
   AirWiresBuilder builder;
-  builder.addPoint(Point(100, 200));
-  builder.addPoint(Point(300, 400));
-  builder.addPoint(Point(-50, -50));
+  builder.addPoint(Point(100000, 200000));
+  builder.addPoint(Point(300000, 400000));
+  builder.addPoint(Point(-50000, -50000));
   AirWiresBuilder::AirWires airwires = sorted(builder.buildAirWires());
-  AirWiresBuilder::AirWires expected = {{Point(-50, -50), Point(100, 200)},
-                                        {Point(100, 200), Point(300, 400)}};
+  AirWiresBuilder::AirWires expected = {
+      {Point(-50000, -50000), Point(100000, 200000)},
+      {Point(100000, 200000), Point(300000, 400000)}};
   EXPECT_EQ(expected, airwires);
 }
 
 TEST_F(AirWiresBuilderTest, testThreeUnconnectedPointsVshape) {
   AirWiresBuilder builder;
-  builder.addPoint(Point(-5, 0));
-  builder.addPoint(Point(10, 0));
-  builder.addPoint(Point(0, -100));
+  builder.addPoint(Point(-50000, 0));
+  builder.addPoint(Point(100000, 0));
+  builder.addPoint(Point(0, -1000000));
   AirWiresBuilder::AirWires airwires = sorted(builder.buildAirWires());
-  AirWiresBuilder::AirWires expected = {{Point(-5, 0), Point(0, -100)},
-                                        {Point(-5, 0), Point(10, 0)}};
+  AirWiresBuilder::AirWires expected = {{Point(-50000, 0), Point(0, -1000000)},
+                                        {Point(-50000, 0), Point(100000, 0)}};
   EXPECT_EQ(expected, airwires);
 }
 
@@ -120,11 +123,11 @@ TEST_F(AirWiresBuilderTest, testThreeUnconnectedPointsVshape) {
 TEST_F(AirWiresBuilderTest, testThreeUnconnectedColinearPoints) {
   AirWiresBuilder builder;
   builder.addPoint(Point(0, 0));
-  builder.addPoint(Point(100, 0));
-  builder.addPoint(Point(-100, 0));
+  builder.addPoint(Point(100000, 0));
+  builder.addPoint(Point(-100000, 0));
   AirWiresBuilder::AirWires airwires = sorted(builder.buildAirWires());
-  AirWiresBuilder::AirWires expected = {{Point(-100, 0), Point(0, 0)},
-                                        {Point(0, 0), Point(100, 0)}};
+  AirWiresBuilder::AirWires expected = {{Point(-100000, 0), Point(0, 0)},
+                                        {Point(0, 0), Point(100000, 0)}};
   EXPECT_EQ(expected, airwires);
 }
 
@@ -132,11 +135,12 @@ TEST_F(AirWiresBuilderTest, testThreeUnconnectedColinearPoints) {
 TEST_F(AirWiresBuilderTest, testThreeUnconnectedDiagonalColinearPoints) {
   AirWiresBuilder builder;
   builder.addPoint(Point(0, 0));
-  builder.addPoint(Point(100, 100));
-  builder.addPoint(Point(200, 200));
+  builder.addPoint(Point(1000000, 1000000));
+  builder.addPoint(Point(2000000, 2000000));
   AirWiresBuilder::AirWires airwires = sorted(builder.buildAirWires());
-  AirWiresBuilder::AirWires expected = {{Point(0, 0), Point(100, 100)},
-                                        {Point(100, 100), Point(200, 200)}};
+  AirWiresBuilder::AirWires expected = {
+      {Point(0, 0), Point(1000000, 1000000)},
+      {Point(1000000, 1000000), Point(2000000, 2000000)}};
   EXPECT_EQ(expected, airwires);
 }
 
@@ -157,19 +161,20 @@ TEST_F(AirWiresBuilderTest, testThreeUnconnectedDiagonalColinearPoints2) {
 TEST_F(AirWiresBuilderTest, testPartlyConnectedColinearPoints) {
   AirWiresBuilder builder;
   /*int id0 = */ builder.addPoint(Point(0, 0));
-  int id1 = builder.addPoint(Point(10, 10));
-  int id2 = builder.addPoint(Point(20, 20));
-  /*int id3 = */ builder.addPoint(Point(30, 30));
-  /*int id4 = */ builder.addPoint(Point(40, 40));
-  /*int id5 = */ builder.addPoint(Point(50, 50));
-  /*int id5 = */ builder.addPoint(Point(60, 60));
+  int id1 = builder.addPoint(Point(100000, 100000));
+  int id2 = builder.addPoint(Point(200000, 200000));
+  /*int id3 = */ builder.addPoint(Point(300000, 300000));
+  /*int id4 = */ builder.addPoint(Point(400000, 400000));
+  /*int id5 = */ builder.addPoint(Point(500000, 500000));
+  /*int id5 = */ builder.addPoint(Point(600000, 600000));
   builder.addEdge(id1, id2);
   AirWiresBuilder::AirWires airwires = sorted(builder.buildAirWires());
-  AirWiresBuilder::AirWires expected = {{Point(0, 0), Point(10, 10)},
-                                        {Point(20, 20), Point(30, 30)},
-                                        {Point(30, 30), Point(40, 40)},
-                                        {Point(40, 40), Point(50, 50)},
-                                        {Point(50, 50), Point(60, 60)}};
+  AirWiresBuilder::AirWires expected = {
+      {Point(0, 0), Point(100000, 100000)},
+      {Point(200000, 200000), Point(300000, 300000)},
+      {Point(300000, 300000), Point(400000, 400000)},
+      {Point(400000, 400000), Point(500000, 500000)},
+      {Point(500000, 500000), Point(600000, 600000)}};
   EXPECT_EQ(expected, airwires);
 }
 
