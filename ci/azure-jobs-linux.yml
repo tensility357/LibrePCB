@@ -34,6 +34,8 @@ jobs:
     displayName: Install Dependencies
   - bash: ./ci/build_librepcb.sh
     displayName: Build LibrePCB
+  - bash: ./ci/copy_qt_translations.sh
+    displayName: Copy Qt Translations
   - bash: ./ci/build_linux_appimage.sh
     displayName: Build AppImage
     condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
