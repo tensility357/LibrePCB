@@ -11,8 +11,8 @@ jobs:
         IMAGE: librepcb/librepcb-dev:ubuntu-14.04-2
       Ubuntu_1604_GCC:
         IMAGE: librepcb/librepcb-dev:ubuntu-16.04-2
-      Ubuntu_1604_Qt_5_12_3_GCC:
-        IMAGE: librepcb/librepcb-dev:ubuntu-16.04-qt5.12.3-3
+      Ubuntu_1604_Qt_5_14_1_GCC:
+        IMAGE: librepcb/librepcb-dev:ubuntu-16.04-qt5.14.1-1
         DEPLOY: true
       Ubuntu_1804_Clang:
         IMAGE: librepcb/librepcb-dev:ubuntu-18.04-2
@@ -34,8 +34,8 @@ jobs:
     displayName: Install Dependencies
   - bash: ./ci/build_librepcb.sh
     displayName: Build LibrePCB
-  - bash: ./ci/copy_qt_translations.sh
-    displayName: Copy Qt Translations
+#  - bash: ./ci/copy_qt_translations.sh
+#    displayName: Copy Qt Translations
   - bash: ./ci/build_linux_appimage.sh
     displayName: Build AppImage
     condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
