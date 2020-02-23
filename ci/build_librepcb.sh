@@ -37,8 +37,12 @@ if [ ! -f ./i18n/librepcb.ts ]; then
 fi
 
 # build librepcb
+echo $PATH
 mkdir build && pushd build
-qmake ../librepcb.pro -r ${BUILDSPEC-} "QMAKE_CXX=$CXX" "QMAKE_CC=$CC" "QMAKE_CFLAGS=$CFLAGS" "QMAKE_CXXFLAGS=$CXXFLAGS" "PREFIX=`pwd`/install/opt"
+pwd
+which qmake
+qmake --version
+qmake -r ../librepcb.pro
 $MAKE -j8
 $MAKE install
 popd
