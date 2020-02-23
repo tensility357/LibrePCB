@@ -1,0 +1,54 @@
+jobs:
+- job: Windows
+  pool:
+    vmImage: 'windows-2019'
+  variables:
+    OS: 'windows'
+    ARCH: 'x86'
+  strategy:
+    matrix:
+      Qt_5_14_1_MINGW:
+        IMAGE: librepcb/librepcb-dev:windowsservercore-ltsc2019-1
+        MINGW: C:/Qt/Tools/mingw730_32
+        QTDIR: C:/Qt/5.14.1/mingw73_32
+        DEPLOY_INSTALLER: true
+  container: $[ variables['IMAGE'] ]
+  steps:
+  - checkout: self
+    clean: true
+    submodules: recursive
+  - script: |
+      set PATH=%PATH%;%MINGW%/bin
+      set PATH=%PATH%;%QTDIR%/bin;
+      set PATH=%PATH%;C:/Qt/Tools/QtCreator/bin
+      set PATH=%PATH%;C:/Program Files/Git/bin
+      echo ##vso[task.setvariable variable=PATH]%PATH%
+  - bash: |
+      source ./ci/install_dependencies.sh
+      # Pass modified PATH to following steps:
+      echo "##vso[task.setvariable variable=PATH]$PATH"
+    displayName: Install Dependencies
+  - bash: ./ci/build_librepcb.sh
+    displayName: Build LibrePCB
+  - bash: ./ci/build_windows_archive.sh
+    displayName: Build Archive
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+  - bash: ./ci/build_installer.sh
+    displayName: Build Installer
+    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+  - script: build\\output\\qztest.exe
+    displayName: Run QuaZip Unittests
+  - script: build\\output\\librepcb-unittests.exe
+    displayName: Run LibrePCB Unittests
+  - script: pytest -v --librepcb-executable="build/install/opt/bin/librepcb-cli.exe" ./tests/cli
+    displayName: Run LibrePCB-CLI Functional Tests
+  - script: pytest -v --librepcb-executable="build/install/opt/bin/librepcb.exe" ./tests/funq
+    displayName: Run LibrePCB Functional Tests
+  - bash: ./ci/upload_artifacts.sh
+    displayName: Upload Artifacts
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    env:
+      UPLOAD_URL: $(ARTIFACTS_UPLOAD_URL)
+      UPLOAD_USER: $(ARTIFACTS_UPLOAD_USER)
+      UPLOAD_PASS: $(ARTIFACTS_UPLOAD_PASS)
+      UPLOAD_SIGN_KEY: $(ARTIFACTS_UPLOAD_SIGN_KEY)
