@@ -18,8 +18,13 @@ if [ -z "${CC-}" ]; then CC="gcc"; fi
 if [ -z "${CXX-}" ]; then CXX="g++"; fi
 
 # make all warnings into errors
-CFLAGS=""
-CXXFLAGS=""
+CFLAGS="-Werror"
+CXXFLAGS="-Werror"
+
+# disable -Wnoexcept-type (see
+# https://stackoverflow.com/questions/46798456/handling-gccs-noexcept-type-warning)
+CFLAGS+=" -Wno-noexcept-type"
+CXXFLAGS+=" -Wno-noexcept-type"
 
 # set special flag for clang (see https://github.com/travis-ci/travis-ci/issues/5383)
 if [ "$CC" = "clang" ]; then CFLAGS+=" -Qunused-arguments"; fi

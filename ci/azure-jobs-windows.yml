@@ -28,9 +28,9 @@ jobs:
   - bash: ./ci/build_windows_archive.sh
     displayName: Build Archive
     condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
-  - bash: ./ci/build_installer.sh
-    displayName: Build Installer
-    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
+#  - bash: ./ci/build_installer.sh
+#    displayName: Build Installer
+#    condition: and(succeeded(), eq(variables['DEPLOY'], 'true'))
 #  - bash: xvfb-run -a ./build/output/qztest
 #    displayName: Run QuaZip Unittests
 #  - bash: xvfb-run -a ./build/output/librepcb-unittests
