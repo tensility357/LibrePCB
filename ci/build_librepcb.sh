@@ -6,8 +6,10 @@ set -euv -o pipefail
 # use mingw32 make on Windows
 if [ "$OS" = "windows" ]
 then
+  QMAKE="wine qmake"
   MAKE="mingw32-make"
 else
+  QMAKE="qmake"
   MAKE="make"
 fi
 
@@ -16,8 +18,8 @@ if [ -z "${CC-}" ]; then CC="gcc"; fi
 if [ -z "${CXX-}" ]; then CXX="g++"; fi
 
 # make all warnings into errors
-CFLAGS="-Werror"
-CXXFLAGS="-Werror"
+CFLAGS=""
+CXXFLAGS=""
 
 # set special flag for clang (see https://github.com/travis-ci/travis-ci/issues/5383)
 if [ "$CC" = "clang" ]; then CFLAGS+=" -Qunused-arguments"; fi
@@ -37,12 +39,8 @@ if [ ! -f ./i18n/librepcb.ts ]; then
 fi
 
 # build librepcb
-echo $PATH
 mkdir build && pushd build
-pwd
-which qmake
-qmake --version
-qmake -r ../librepcb.pro
+$QMAKE ../librepcb.pro -r ${BUILDSPEC-} "QMAKE_CXX=$CXX" "QMAKE_CC=$CC" "QMAKE_CFLAGS=$CFLAGS" "QMAKE_CXXFLAGS=$CXXFLAGS" "PREFIX=`pwd`/install/opt"
 $MAKE -j8
 $MAKE install
 popd
