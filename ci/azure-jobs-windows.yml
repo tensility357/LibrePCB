@@ -9,21 +9,22 @@ jobs:
     matrix:
       Qt_5_14_1_MINGW:
         IMAGE: librepcb/librepcb-dev:wine-1
-        DEPLOY: true
-        WINEPREFIX: /root/.wine
         WINEPATH: "C:\\Qt\\5.14.1\\mingw73_32\\bin;C:\\Qt\\Tools\\mingw730_32\\bin"
+        DEPLOY: true
   container: $[ variables['IMAGE'] ]
   steps:
   - checkout: self
     clean: true
     submodules: recursive
   - bash: |
-      source ./ci/install_dependencies.sh
-      # Pass modified PATH to following steps:
-      echo "##vso[task.setvariable variable=PATH]$PATH"
-    displayName: Install Dependencies
-  - bash: echo $WINEPATH
-  - bash: wine qmake --version
+      mkdir ~/.wine
+      ln -s /drive_c ~/.wine/drive_c
+    displayName: Configure Wine
+#  - bash: |
+#      source ./ci/install_dependencies.sh
+#      # Pass modified PATH to following steps:
+#      echo "##vso[task.setvariable variable=PATH]$PATH"
+#    displayName: Install Dependencies
   - bash: ./ci/build_librepcb.sh
     displayName: Build LibrePCB
   - bash: ./ci/build_windows_archive.sh
