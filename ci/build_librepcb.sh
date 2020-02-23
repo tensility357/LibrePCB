@@ -7,7 +7,7 @@ set -euv -o pipefail
 if [ "$OS" = "windows" ]
 then
   QMAKE="wine qmake"
-  MAKE="mingw32-make"
+  MAKE="wine mingw32-make"
 else
   QMAKE="qmake"
   MAKE="make"

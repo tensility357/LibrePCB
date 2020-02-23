@@ -16,9 +16,7 @@ jobs:
   - checkout: self
     clean: true
     submodules: recursive
-  - bash: |
-      mkdir ~/.wine
-      ln -s /drive_c ~/.wine/drive_c
+  - bash: mkdir ~/.wine && ln -s /drive_c ~/.wine/drive_c
     displayName: Configure Wine
 #  - bash: |
 #      source ./ci/install_dependencies.sh
