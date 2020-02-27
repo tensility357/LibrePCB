@@ -23,7 +23,6 @@ CXXFLAGS="-Werror"
 
 # disable -Wnoexcept-type (see
 # https://stackoverflow.com/questions/46798456/handling-gccs-noexcept-type-warning)
-CFLAGS+=" -Wno-noexcept-type"
 CXXFLAGS+=" -Wno-noexcept-type"
 
 # set special flag for clang (see https://github.com/travis-ci/travis-ci/issues/5383)
