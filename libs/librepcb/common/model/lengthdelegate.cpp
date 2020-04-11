@@ -58,8 +58,9 @@ void LengthDelegate::setUnit(const LengthUnit& unit) noexcept {
 
 QString LengthDelegate::displayText(const QVariant& value,
                                     const QLocale&  locale) const {
-  return Toolbox::floatToString(value.value<Length>().toMm(), 10, locale) %
-         " " % mUnit.toShortStringTr();
+  qreal converted = mUnit.convertToUnit(value.value<Length>());
+  return Toolbox::floatToString(converted, 10, locale) % " " %
+         mUnit.toShortStringTr();
 }
 
 QWidget* LengthDelegate::createEditor(QWidget*                    parent,
