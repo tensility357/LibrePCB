@@ -74,6 +74,7 @@ bool PackageEditorState_AddHoles::entry() noexcept {
   mContext.commandToolBar.addLabel(tr("Diameter:"), 10);
 
   std::unique_ptr<PositiveLengthEdit> edtDiameter(new PositiveLengthEdit());
+  edtDiameter->configureForDrillDiameter(getDefaultLengthUnit());
   edtDiameter->setValue(mLastDiameter);
   connect(edtDiameter.get(), &PositiveLengthEdit::valueChanged, this,
           &PackageEditorState_AddHoles::diameterEditValueChanged);
