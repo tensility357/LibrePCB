@@ -33,6 +33,7 @@ namespace librepcb {
 
 class UndoStack;
 class UndoCommand;
+class LengthUnit;
 
 namespace project {
 
@@ -60,8 +61,9 @@ public:
   BoardViaPropertiesDialog()                                      = delete;
   BoardViaPropertiesDialog(const BoardViaPropertiesDialog& other) = delete;
   explicit BoardViaPropertiesDialog(Project& project, BI_Via& via,
-                                    UndoStack& undoStack,
-                                    QWidget*   parent) noexcept;
+                                    UndoStack&        undoStack,
+                                    const LengthUnit& lengthUnit,
+                                    QWidget*          parent) noexcept;
   ~BoardViaPropertiesDialog() noexcept;
 
 private:

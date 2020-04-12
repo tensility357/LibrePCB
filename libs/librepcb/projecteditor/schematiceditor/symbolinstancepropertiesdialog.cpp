@@ -58,7 +58,8 @@ namespace editor {
 
 SymbolInstancePropertiesDialog::SymbolInstancePropertiesDialog(
     workspace::Workspace& ws, Project& project, ComponentInstance& cmp,
-    SI_Symbol& symbol, UndoStack& undoStack, QWidget* parent) noexcept
+    SI_Symbol& symbol, UndoStack& undoStack, const LengthUnit& lengthUnit,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mWorkspace(ws),
     mProject(project),
@@ -68,6 +69,8 @@ SymbolInstancePropertiesDialog::SymbolInstancePropertiesDialog(
     mAttributes(mComponentInstance.getAttributes()),
     mUi(new Ui::SymbolInstancePropertiesDialog) {
   mUi->setupUi(this);
+  mUi->edtSymbInstPosX->configureForCoordinate(lengthUnit);
+  mUi->edtSymbInstPosY->configureForCoordinate(lengthUnit);
   mUi->edtSymbInstRotation->setSingleStep(90.0);  // [°]
   setWindowTitle(QString(tr("Properties of %1")).arg(mSymbol.getName()));
 

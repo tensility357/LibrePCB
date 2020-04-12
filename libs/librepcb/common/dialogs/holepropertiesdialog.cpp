@@ -36,12 +36,16 @@
 namespace librepcb {
 
 HolePropertiesDialog::HolePropertiesDialog(Hole& hole, UndoStack& undoStack,
-                                           QWidget* parent) noexcept
+                                           const LengthUnit& lengthUnit,
+                                           QWidget*          parent) noexcept
   : QDialog(parent),
     mHole(hole),
     mUndoStack(undoStack),
     mUi(new Ui::HolePropertiesDialog) {
   mUi->setupUi(this);
+  mUi->edtDiameter->configureForDrillDiameter(lengthUnit);
+  mUi->edtPosX->configureForCoordinate(lengthUnit);
+  mUi->edtPosY->configureForCoordinate(lengthUnit);
   connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
           &HolePropertiesDialog::on_buttonBox_clicked);
 

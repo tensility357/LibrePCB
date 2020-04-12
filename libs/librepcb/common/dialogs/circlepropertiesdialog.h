@@ -34,6 +34,7 @@ namespace librepcb {
 class UndoStack;
 class Circle;
 class GraphicsLayer;
+class LengthUnit;
 
 namespace Ui {
 class CirclePropertiesDialog;
@@ -55,6 +56,7 @@ public:
   CirclePropertiesDialog(const CirclePropertiesDialog& other) = delete;
   CirclePropertiesDialog(Circle& circle, UndoStack& undoStack,
                          QList<GraphicsLayer*> layers,
+                         const LengthUnit&     lengthUnit,
                          QWidget*              parent = nullptr) noexcept;
   ~CirclePropertiesDialog() noexcept;
 

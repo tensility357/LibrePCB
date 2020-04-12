@@ -32,6 +32,7 @@
 namespace librepcb {
 
 class UndoStack;
+class LengthUnit;
 
 namespace library {
 
@@ -62,7 +63,8 @@ public:
       delete;
   FootprintPadPropertiesDialog(const Package& pkg, const Footprint& fpt,
                                FootprintPad& pad, UndoStack& undoStack,
-                               QWidget* parent = nullptr) noexcept;
+                               const LengthUnit& lengthUnit,
+                               QWidget*          parent = nullptr) noexcept;
   ~FootprintPadPropertiesDialog() noexcept;
 
   // Operator Overloadings

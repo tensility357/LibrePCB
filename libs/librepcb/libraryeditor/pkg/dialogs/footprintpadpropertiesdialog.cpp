@@ -41,12 +41,18 @@ namespace editor {
 
 FootprintPadPropertiesDialog::FootprintPadPropertiesDialog(
     const Package& pkg, const Footprint& fpt, FootprintPad& pad,
-    UndoStack& undoStack, QWidget* parent) noexcept
+    UndoStack& undoStack, const LengthUnit& lengthUnit,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mPad(pad),
     mUndoStack(undoStack),
     mUi(new Ui::FootprintPadPropertiesDialog) {
   mUi->setupUi(this);
+  mUi->edtWidth->configureForSize(lengthUnit);
+  mUi->edtHeight->configureForSize(lengthUnit);
+  mUi->edtDrillDiameter->configureForDrillDiameter(lengthUnit);
+  mUi->edtPosX->configureForCoordinate(lengthUnit);
+  mUi->edtPosY->configureForCoordinate(lengthUnit);
   mUi->edtRotation->setSingleStep(90.0);  // [°]
   connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
           &FootprintPadPropertiesDialog::on_buttonBox_clicked);

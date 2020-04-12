@@ -39,12 +39,16 @@ namespace librepcb {
 
 StrokeTextPropertiesDialog::StrokeTextPropertiesDialog(
     StrokeText& text, UndoStack& undoStack, QList<GraphicsLayer*> layers,
-    QWidget* parent) noexcept
+    const LengthUnit& lengthUnit, QWidget* parent) noexcept
   : QDialog(parent),
     mText(text),
     mUndoStack(undoStack),
     mUi(new Ui::StrokeTextPropertiesDialog) {
   mUi->setupUi(this);
+  mUi->edtHeight->configureForTextHeight();
+  mUi->edtStrokeWidth->configureForTextStrokeWidth();
+  mUi->edtPosX->configureForCoordinate(lengthUnit);
+  mUi->edtPosY->configureForCoordinate(lengthUnit);
   mUi->edtRotation->setSingleStep(90.0);  // [°]
 
   foreach (const GraphicsLayer* layer, layers) {

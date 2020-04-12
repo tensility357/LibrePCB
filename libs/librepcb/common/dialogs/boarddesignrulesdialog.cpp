@@ -36,13 +36,23 @@ namespace librepcb {
  ******************************************************************************/
 
 BoardDesignRulesDialog::BoardDesignRulesDialog(const BoardDesignRules& rules,
-                                               QWidget*                parent)
+                                               const LengthUnit& lengthUnit,
+                                               QWidget*          parent)
   : QDialog(parent), mUi(new Ui::BoardDesignRulesDialog), mDesignRules(rules) {
   mUi->setupUi(this);
-  mUi->edtStopMaskClrRatio->setSingleStep(5.0);   // [%]
+  mUi->edtStopMaskClrRatio->setSingleStep(5.0);  // [%]
+  mUi->edtStopMaskClrMin->configureForClearance(lengthUnit);
+  mUi->edtStopMaskClrMax->configureForClearance(lengthUnit);
+  mUi->edtStopMaskMaxViaDia->configureForSize(lengthUnit);
   mUi->edtCreamMaskClrRatio->setSingleStep(5.0);  // [%]
+  mUi->edtCreamMaskClrMin->configureForClearance(lengthUnit);
+  mUi->edtCreamMaskClrMax->configureForClearance(lengthUnit);
   mUi->edtRestringPadsRatio->setSingleStep(5.0);  // [%]
+  mUi->edtRestringPadsMin->configureForClearance(lengthUnit);
+  mUi->edtRestringPadsMax->configureForClearance(lengthUnit);
   mUi->edtRestringViasRatio->setSingleStep(5.0);  // [%]
+  mUi->edtRestringViasMin->configureForClearance(lengthUnit);
+  mUi->edtRestringViasMax->configureForClearance(lengthUnit);
 
   updateWidgets();
 }

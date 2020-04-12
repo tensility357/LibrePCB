@@ -43,16 +43,21 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BoardViaPropertiesDialog::BoardViaPropertiesDialog(Project&   project,
-                                                   BI_Via&    via,
-                                                   UndoStack& undoStack,
-                                                   QWidget*   parent) noexcept
+BoardViaPropertiesDialog::BoardViaPropertiesDialog(Project&          project,
+                                                   BI_Via&           via,
+                                                   UndoStack&        undoStack,
+                                                   const LengthUnit& lengthUnit,
+                                                   QWidget* parent) noexcept
   : QDialog(parent),
     mProject(project),
     mVia(via),
     mUi(new Ui::BoardViaPropertiesDialog),
     mUndoStack(undoStack) {
   mUi->setupUi(this);
+  mUi->edtSize->configureForSize(lengthUnit);
+  mUi->edtDrillDiameter->configureForDrillDiameter(lengthUnit);
+  mUi->edtPosX->configureForCoordinate(lengthUnit);
+  mUi->edtPosY->configureForCoordinate(lengthUnit);
 
   // shape combobox
   mUi->cbxShape->addItem(tr("Round"), static_cast<int>(BI_Via::Shape::Round));
@@ -79,10 +84,6 @@ BoardViaPropertiesDialog::BoardViaPropertiesDialog(Project&   project,
 BoardViaPropertiesDialog::~BoardViaPropertiesDialog() noexcept {
   mUi.reset();
 }
-
-/*******************************************************************************
- *  Private Slots
- ******************************************************************************/
 
 /*******************************************************************************
  *  Private Methods

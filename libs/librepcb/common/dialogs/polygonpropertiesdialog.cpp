@@ -39,12 +39,15 @@ namespace librepcb {
 PolygonPropertiesDialog::PolygonPropertiesDialog(Polygon&   polygon,
                                                  UndoStack& undoStack,
                                                  QList<GraphicsLayer*> layers,
+                                                 const LengthUnit& lengthUnit,
                                                  QWidget* parent) noexcept
   : QDialog(parent),
     mPolygon(polygon),
     mUndoStack(undoStack),
     mUi(new Ui::PolygonPropertiesDialog) {
   mUi->setupUi(this);
+  mUi->edtLineWidth->configureForLineWidth(lengthUnit);
+  mUi->pathEditorWidget->setLengthUnit(lengthUnit);
 
   foreach (const GraphicsLayer* layer, layers) {
     mUi->cbxLayer->addItem(layer->getNameTr(), layer->getName());

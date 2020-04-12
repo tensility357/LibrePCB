@@ -38,14 +38,17 @@ namespace librepcb {
 namespace library {
 namespace editor {
 
-SymbolPinPropertiesDialog::SymbolPinPropertiesDialog(SymbolPin& pin,
-                                                     UndoStack& undoStack,
-                                                     QWidget*   parent) noexcept
+SymbolPinPropertiesDialog::SymbolPinPropertiesDialog(
+    SymbolPin& pin, UndoStack& undoStack, const LengthUnit& lengthUnit,
+    QWidget* parent) noexcept
   : QDialog(parent),
     mSymbolPin(pin),
     mUndoStack(undoStack),
     mUi(new Ui::SymbolPinPropertiesDialog) {
   mUi->setupUi(this);
+  mUi->edtLength->configureForPinLength(lengthUnit);
+  mUi->edtPosX->configureForCoordinate(lengthUnit);
+  mUi->edtPosY->configureForCoordinate(lengthUnit);
   mUi->edtRotation->setSingleStep(90.0);  // [°]
   connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
           &SymbolPinPropertiesDialog::on_buttonBox_clicked);

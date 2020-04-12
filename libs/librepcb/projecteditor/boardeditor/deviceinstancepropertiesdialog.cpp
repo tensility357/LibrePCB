@@ -50,7 +50,7 @@ namespace editor {
 
 DeviceInstancePropertiesDialog::DeviceInstancePropertiesDialog(
     Project& project, BI_Device& device, UndoStack& undoStack,
-    QWidget* parent) noexcept
+    const LengthUnit& lengthUnit, QWidget* parent) noexcept
   : QDialog(parent),
     mProject(project),
     mDevice(device),
@@ -58,6 +58,8 @@ DeviceInstancePropertiesDialog::DeviceInstancePropertiesDialog(
     mAttributes(mDevice.getComponentInstance().getAttributes()),
     mUi(new Ui::DeviceInstancePropertiesDialog) {
   mUi->setupUi(this);
+  mUi->edtPosX->configureForCoordinate(lengthUnit);
+  mUi->edtPosY->configureForCoordinate(lengthUnit);
   mUi->edtRotation->setSingleStep(90.0);  // [°]
   connect(mUi->buttonBox, &QDialogButtonBox::clicked, this,
           &DeviceInstancePropertiesDialog::buttonBoxClicked);

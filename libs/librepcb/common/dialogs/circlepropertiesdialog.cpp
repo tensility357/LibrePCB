@@ -39,12 +39,17 @@ namespace librepcb {
 CirclePropertiesDialog::CirclePropertiesDialog(Circle&               circle,
                                                UndoStack&            undoStack,
                                                QList<GraphicsLayer*> layers,
+                                               const LengthUnit&     lengthUnit,
                                                QWidget* parent) noexcept
   : QDialog(parent),
     mCircle(circle),
     mUndoStack(undoStack),
     mUi(new Ui::CirclePropertiesDialog) {
   mUi->setupUi(this);
+  mUi->edtLineWidth->configureForLineWidth(lengthUnit);
+  mUi->edtDiameter->configureForSize(lengthUnit);
+  mUi->edtPosX->configureForCoordinate(lengthUnit);
+  mUi->edtPosY->configureForCoordinate(lengthUnit);
 
   foreach (const GraphicsLayer* layer, layers) {
     mUi->cbxLayer->addItem(layer->getNameTr(), layer->getName());

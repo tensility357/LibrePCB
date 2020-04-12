@@ -32,6 +32,7 @@
 namespace librepcb {
 
 class UndoStack;
+class LengthUnit;
 
 namespace library {
 
@@ -58,7 +59,8 @@ public:
   SymbolPinPropertiesDialog()                                       = delete;
   SymbolPinPropertiesDialog(const SymbolPinPropertiesDialog& other) = delete;
   SymbolPinPropertiesDialog(SymbolPin& pin, UndoStack& undoStack,
-                            QWidget* parent = nullptr) noexcept;
+                            const LengthUnit& lengthUnit,
+                            QWidget*          parent = nullptr) noexcept;
   ~SymbolPinPropertiesDialog() noexcept;
 
   // Operator Overloadings

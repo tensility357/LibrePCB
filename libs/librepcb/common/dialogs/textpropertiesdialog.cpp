@@ -38,12 +38,16 @@ namespace librepcb {
 
 TextPropertiesDialog::TextPropertiesDialog(Text& text, UndoStack& undoStack,
                                            QList<GraphicsLayer*> layers,
+                                           const LengthUnit&     lengthUnit,
                                            QWidget* parent) noexcept
   : QDialog(parent),
     mText(text),
     mUndoStack(undoStack),
     mUi(new Ui::TextPropertiesDialog) {
   mUi->setupUi(this);
+  mUi->edtHeight->configureForTextHeight();
+  mUi->edtPosX->configureForCoordinate(lengthUnit);
+  mUi->edtPosY->configureForCoordinate(lengthUnit);
   mUi->edtRotation->setSingleStep(90.0);  // [°]
 
   foreach (const GraphicsLayer* layer, layers) {

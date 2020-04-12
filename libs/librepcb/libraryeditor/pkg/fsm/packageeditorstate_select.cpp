@@ -400,7 +400,7 @@ bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
     Q_ASSERT(item);
     FootprintPadPropertiesDialog dialog(
         mContext.package, *mContext.currentFootprint, item->getPad(),
-        mContext.undoStack, &mContext.editorWidget);
+        mContext.undoStack, getDefaultLengthUnit(), &mContext.editorWidget);
     dialog.exec();
     return true;
   } else if (texts.count() > 0) {
@@ -410,7 +410,7 @@ bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
     StrokeTextPropertiesDialog dialog(
         item->getText(), mContext.undoStack,
         mContext.layerProvider.getBoardGeometryElementLayers(),
-        &mContext.editorWidget);
+        getDefaultLengthUnit(), &mContext.editorWidget);
     dialog.exec();
     return true;
   } else if (polygons.count() > 0) {
@@ -420,7 +420,7 @@ bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
     PolygonPropertiesDialog dialog(
         item->getPolygon(), mContext.undoStack,
         mContext.layerProvider.getBoardGeometryElementLayers(),
-        &mContext.editorWidget);
+        getDefaultLengthUnit(), &mContext.editorWidget);
     dialog.exec();
     return true;
   } else if (circles.count() > 0) {
@@ -430,7 +430,7 @@ bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
     CirclePropertiesDialog dialog(
         item->getCircle(), mContext.undoStack,
         mContext.layerProvider.getBoardGeometryElementLayers(),
-        &mContext.editorWidget);
+        getDefaultLengthUnit(), &mContext.editorWidget);
     dialog.exec();
     return true;
   } else if (holes.count() > 0) {
@@ -438,7 +438,7 @@ bool PackageEditorState_Select::openPropertiesDialogOfItemAtPos(
         dynamic_cast<HoleGraphicsItem*>(holes.first().data());
     Q_ASSERT(item);
     HolePropertiesDialog dialog(item->getHole(), mContext.undoStack,
-                                &mContext.editorWidget);
+                                getDefaultLengthUnit(), &mContext.editorWidget);
     dialog.exec();
     return true;
   } else {

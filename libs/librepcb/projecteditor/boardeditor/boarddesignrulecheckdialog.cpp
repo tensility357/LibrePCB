@@ -42,9 +42,17 @@ namespace editor {
 
 BoardDesignRuleCheckDialog::BoardDesignRuleCheckDialog(
     Board& board, const BoardDesignRuleCheck::Options& options,
-    QWidget* parent) noexcept
+    const LengthUnit& lengthUnit, QWidget* parent) noexcept
   : QDialog(parent), mBoard(board), mUi(new Ui::BoardDesignRuleCheckDialog) {
   mUi->setupUi(this);
+  mUi->edtClearanceCopperCopper->configureForClearance(lengthUnit);
+  mUi->edtClearanceCopperBoard->configureForClearance(lengthUnit);
+  mUi->edtClearanceCopperNpth->configureForClearance(lengthUnit);
+  mUi->edtMinCopperWidth->configureForLineWidth(lengthUnit);
+  mUi->edtMinPthRestring->configureForClearance(lengthUnit);
+  mUi->edtMinPthDrillDiameter->configureForDrillDiameter(lengthUnit);
+  mUi->edtMinNpthDrillDiameter->configureForDrillDiameter(lengthUnit);
+  mUi->edtCourtyardOffset->configureForClearance(lengthUnit);
   connect(mUi->btnRun, &QPushButton::clicked, this,
           &BoardDesignRuleCheckDialog::btnRunDrcClicked);
 
