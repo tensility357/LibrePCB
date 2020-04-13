@@ -147,6 +147,7 @@ SOURCES += \
     widgets/graphicslayercombobox.cpp \
     widgets/halignactiongroup.cpp \
     widgets/lengthedit.cpp \
+    widgets/lengtheditbase.cpp \
     widgets/numbereditbase.cpp \
     widgets/patheditorwidget.cpp \
     widgets/plaintextedit.cpp \
@@ -293,6 +294,7 @@ HEADERS += \
     widgets/graphicslayercombobox.h \
     widgets/halignactiongroup.h \
     widgets/lengthedit.h \
+    widgets/lengtheditbase.h \
     widgets/numbereditbase.h \
     widgets/patheditorwidget.h \
     widgets/plaintextedit.h \
